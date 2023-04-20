@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python3.9
+
+  Sample SAM Template for finbricks-hackaton
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Resources:
+  FirstFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Description: "FirstFunction to be called from API GW"
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue # allow secrets to be read
+                - lambda:* # allow it to call any lambda in this account
+              Resource: '*'
+      Events:
+        Event:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /event
+            Method: get
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./first_function
+      DockerTag: python3.9-v1
+  SecondFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Description: "SecondFunction to be called by FirstFunction"
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - lambda:*
+              Resource: '*'
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./second_function
+      DockerTag: python3.9-v1
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  HelloWorldApi:
+    Description: "API Gateway endpoint URL for Prod stage for FirstFunction"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/event/"
+  FirstFunction:
+    Description: "FirstFunction Lambda Function ARN"
+    Value: !GetAtt FirstFunction.Arn
+  FirstFunctionIamRole:
+    Description: "Implicit IAM Role created for FirstFunction function"
+    Value: !GetAtt FirstFunctionRole.Arn
+
+  SecondFunction:
+    Description: "SecondFunction Lambda Function ARN"
+    Value: !GetAtt SecondFunction.Arn
+  SecondFunctionIamRole:
+    Description: "Implicit IAM Role created for SecondFunction function"
+    Value: !GetAtt SecondFunctionRole.Arn
