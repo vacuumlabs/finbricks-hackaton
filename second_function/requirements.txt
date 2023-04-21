@@ -1,2 +1,5 @@
 boto3
 botocore
+langchain==0.0.146
+openai==0.27.4
+jinja2

@@ -8,8 +8,14 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
-    MemorySize: 128
+    Timeout: 180
+    MemorySize: 256
+
+Parameters:
+  OpenaiApiKey:
+    Type: String
+    Description: OPENAI_API_KEY
+    Default: "EMPTY"
 
 Resources:
   FirstFunction:
@@ -44,6 +50,9 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Description: "SecondFunction to be called by FirstFunction"
     Properties:
+      Environment:
+        Variables:
+          OpenaiApiKey: !Ref OpenaiApiKey
       PackageType: Image
       Architectures:
         - x86_64
@@ -80,3 +89,20 @@ Outputs:
   SecondFunctionIamRole:
     Description: "Implicit IAM Role created for SecondFunction function"
     Value: !GetAtt SecondFunctionRole.Arn
+
+#Mappings:
+#  Map:
+#    LOCAL:
+#      OPENAI_API_KEY: OPENAI_API_KEY
+#    PROD:
+#      OPENAI_API_KEY: '{{resolve:sam:OPENAI_API_KEY}}'
+#
+#
+#Parameters:
+#  Env:
+#    Type: String
+#    Description: Environment this lambda is being run in.
+#    Default: LOCAL
+#    AllowedValues:
+#      - LOCAL
+#      - PROD

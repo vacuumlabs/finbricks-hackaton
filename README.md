@@ -95,8 +95,9 @@ Test a single function by invoking it directly with a test event. An event is a 
 Run functions locally and invoke them with the `sam local invoke` command.
 
 ```bash
-finbricks-hackaton$ sam local invoke FirstFunction --event events/event.json
+finbricks-hackaton$ sam local invoke FirstFunction --event events/event.json --env-vars ./.env.json
 ```
+ENV vars are used as secrets
 
 The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
 
