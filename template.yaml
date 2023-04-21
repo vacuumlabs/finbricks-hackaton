@@ -19,6 +19,9 @@ Resources:
       PackageType: Image
       Architectures:
         - x86_64
+      Environment:
+        Variables:
+          SECOND_FUNCTION_ARN: !GetAtt SecondFunction.Arn
       Policies:
         - Version: '2012-10-17' # Policy Document
           Statement:

@@ -1,4 +1,5 @@
 import json
+import os
 
 import boto3 as boto3
 
@@ -6,7 +7,7 @@ import boto3 as boto3
 def lambda_handler(event, context):
     print(event)
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
-    response = lambda_inv.invoke(FunctionName='arn:aws:lambda:eu-central-1:910309976263:function:finbricks-hackaton-SecondFunction-FqBGHnJ1bSCa',
+    response = lambda_inv.invoke(FunctionName=os.environ["SECOND_FUNCTION_ARN"],  # 'finbricks-hackaton-SecondFunction-FqBGHnJ1bSCa',
                                  InvocationType='RequestResponse', Payload=json.dumps(event))
     response_payload = json.loads(response['Payload'].read())
 
@@ -22,4 +23,4 @@ def lambda_handler(event, context):
 
 # Test locally
 if __name__ == "__main__":
-    print(lambda_handler(json.load(open("events/event.json")), None))
+    print(lambda_handler(json.load(open("../events/function_1_event.json")), None))
