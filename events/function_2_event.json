@@ -1,0 +1,117 @@
+{
+  "resource": "/event",
+  "path": "/event",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept-Encoding": "gzip",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-ASN": "25248",
+    "CloudFront-Viewer-Country": "CZ",
+    "Host": "c6395pf0ni.execute-api.eu-central-1.amazonaws.com",
+    "traceparent": "00-c42acf2289114639a2af3c0b1a7a89af-a835964e707849e8-01",
+    "tracestate": "",
+    "User-Agent": "Dart/2.18 (dart:io)",
+    "Via": "1.1 c5c25772c7f14e267596e0f8ce51d9bc.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "99--Ayv2RWrbzm8LmH2MbFjVDxVMF_wq4ztPRCCcDBKSKSvKcULffA==",
+    "X-Amzn-Trace-Id": "Root=1-64422996-56c4ccc947236b1302c852b7",
+    "X-Forwarded-For": "85.207.11.86, 70.132.4.153",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "multiValueHeaders": {
+    "Accept-Encoding": [
+      "gzip"
+    ],
+    "CloudFront-Forwarded-Proto": [
+      "https"
+    ],
+    "CloudFront-Is-Desktop-Viewer": [
+      "true"
+    ],
+    "CloudFront-Is-Mobile-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-SmartTV-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-Tablet-Viewer": [
+      "false"
+    ],
+    "CloudFront-Viewer-ASN": [
+      "25248"
+    ],
+    "CloudFront-Viewer-Country": [
+      "CZ"
+    ],
+    "Host": [
+      "c6395pf0ni.execute-api.eu-central-1.amazonaws.com"
+    ],
+    "traceparent": [
+      "00-c42acf2289114639a2af3c0b1a7a89af-a835964e707849e8-01"
+    ],
+    "tracestate": [
+      ""
+    ],
+    "User-Agent": [
+      "Dart/2.18 (dart:io)"
+    ],
+    "Via": [
+      "1.1 c5c25772c7f14e267596e0f8ce51d9bc.cloudfront.net (CloudFront)"
+    ],
+    "X-Amz-Cf-Id": [
+      "99--Ayv2RWrbzm8LmH2MbFjVDxVMF_wq4ztPRCCcDBKSKSvKcULffA=="
+    ],
+    "X-Amzn-Trace-Id": [
+      "Root=1-64422996-56c4ccc947236b1302c852b7"
+    ],
+    "X-Forwarded-For": [
+      "85.207.11.86, 70.132.4.153"
+    ],
+    "X-Forwarded-Port": [
+      "443"
+    ],
+    "X-Forwarded-Proto": [
+      "https"
+    ]
+  },
+  "queryStringParameters": "null",
+  "multiValueQueryStringParameters": "null",
+  "pathParameters": "null",
+  "stageVariables": "null",
+  "requestContext": {
+    "resourceId": "vl8atb",
+    "resourcePath": "/event",
+    "httpMethod": "GET",
+    "extendedRequestId": "DttvoHQSFiAFjjA=",
+    "requestTime": "21/Apr/2023:06:13:42 +0000",
+    "path": "/Prod/event",
+    "accountId": "910309976263",
+    "protocol": "HTTP/1.1",
+    "stage": "Prod",
+    "domainPrefix": "c6395pf0ni",
+    "requestTimeEpoch": 1682057622948,
+    "requestId": "2431868a-fbb4-4518-b364-a77755af5787",
+    "identity": {
+      "cognitoIdentityPoolId": "null",
+      "accountId": "null",
+      "cognitoIdentityId": "null",
+      "caller": "null",
+      "sourceIp": "85.207.11.86",
+      "principalOrgId": "null",
+      "accessKey": "null",
+      "cognitoAuthenticationType": "null",
+      "cognitoAuthenticationProvider": "null",
+      "userArn": "null",
+      "userAgent": "Dart/2.18 (dart:io)",
+      "user": "null"
+    },
+    "domainName": "c6395pf0ni.execute-api.eu-central-1.amazonaws.com",
+    "apiId": "c6395pf0ni"
+  },
+  "body": "null",
+  "isBase64Encoded": "False"
+}
