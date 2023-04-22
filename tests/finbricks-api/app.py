@@ -48,8 +48,11 @@ transactions_response = requests.get(
     f'{base_url}{transactions_endpoint}',
     headers={'JWS-Signature': get_signature(transactions_endpoint, "")})
 
+if transactions_response.status_code == 200:
+    for transaction in transactions_response.json()["transactions"]:
+        target_creditor = transaction["entryDetails"]["transactionDetails"]["relatedParties"]["creditor"]
+        creditor = target_creditor["name"] if target_creditor else transaction["entryDetails"]["transactionDetails"]["relatedParties"]["creditorAccount"]["identification"]["other"]["identification"]
+        print(f'{transaction["creditDebitIndicator"]} {transaction["valueDate"]["date"]} {transaction["amount"]["value"]} {transaction["amount"]["currency"]} {creditor}')
+else:
+    print('Transaction fetch failed!')
 
-# print(auth_body)
-print(auth_response.json())
-print(accounts_response.json())
-print(transactions_response.json())
