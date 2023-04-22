@@ -1,6 +1,4 @@
-import base64
 import json
-from base64 import urlsafe_b64encode
 
 import jwt
 import requests
