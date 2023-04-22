@@ -22,6 +22,8 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Description: "FirstFunction to be called from API GW"
     Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
       PackageType: Image
       Architectures:
         - x86_64
@@ -50,6 +52,8 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Description: "SecondFunction to be called by FirstFunction"
     Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
       Environment:
         Variables:
           OpenaiApiKey: !Ref OpenaiApiKey
