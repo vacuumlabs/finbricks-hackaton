@@ -5,7 +5,7 @@ import boto3 as boto3
 import jwt
 import requests
 
-from first_function.aws import get_secret
+from aws import get_secret
 
 
 def get_signature(endpoint, body, kid, private_key):
@@ -21,7 +21,7 @@ def get_signature(endpoint, body, kid, private_key):
 
 
 def lambda_handler(event, context):
-    private_key = json.loads(get_secret("finbricks_pk"))['value']
+    private_key = get_secret("finbricks_pk3")
 
     kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
     client_id = "hackathon2023_vl"
