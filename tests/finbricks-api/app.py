@@ -1,16 +1,17 @@
 import json
-
 import jwt
+import os
 import requests
 
-# from jose import jws
-
-private_key = open("/Users/michalzan/.ssh/finbricks_private.pem", "r").read()
+private_key = open(os.environ["PK_PATH"], "r").read()
 
 kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
 clientId = "hackathon2023_vl"
 base_url = 'https://api.sandbox.finbricks.com'
 accounts_endpoint = f'/account/list?merchantId={kid}&clientId={clientId}&paymentProvider=MOCK_COBS'
+bankAccountId=10037188
+transactions_endpoint = f'/account/transactions?merchantId={kid}&clientId={clientId}&paymentProvider=MOCK_COBS&bankAccountId={bankAccountId}'
+
 auth_endpoint = '/auth/authenticate'
 auth_body = {
     "merchantId": kid,
@@ -39,11 +40,16 @@ auth_response = requests.post(
     headers={'JWS-Signature': get_signature(auth_endpoint, json.dumps(auth_body))}
 )
 
-response = requests.get(
+accounts_response = requests.get(
     f'{base_url}{accounts_endpoint}',
     headers={'JWS-Signature': get_signature(accounts_endpoint, "")})
+
+transactions_response = requests.get(
+    f'{base_url}{transactions_endpoint}',
+    headers={'JWS-Signature': get_signature(transactions_endpoint, "")})
 
 
 # print(auth_body)
 print(auth_response.json())
-print(response.json())
+print(accounts_response.json())
+print(transactions_response.json())
