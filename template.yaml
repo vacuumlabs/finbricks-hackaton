@@ -126,6 +126,36 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./transaction_categorization
       DockerTag: python3.9-v1
+  AuthenticationFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Description: "Function to authenticate the client"
+    Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      PackageType: Image
+      Environment:
+        Variables:
+          OpenaiApiKey: !Ref OpenaiApiKey
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue # allow secrets to be read
+                - lambda:* # allow it to call any lambda in this account
+              Resource: '*'
+      Events:
+        Generate:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /authenticate
+            Method: get
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./authentication
+      DockerTag: python3.9-v1
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -157,3 +187,13 @@ Outputs:
   TransactionCategorizationFunctionIamRole:
     Description: "Implicit IAM Role created for FinAdviceInvokeFunction function"
     Value: !GetAtt TransactionCategorizationFunctionRole.Arn
+
+  AuthenticationApi:
+    Description: "API Gateway endpoint URL for Prod stage for AuthenticationFunction"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/authenticate/"
+  AuthenticationFunction:
+    Description: "AuthenticationFunction Lambda Function ARN"
+    Value: !GetAtt AuthenticationFunction.Arn
+  AuthenticationFunctionIamRole:
+    Description: "Implicit IAM Role created for AuthenticationFunction function"
+    Value: !GetAtt AuthenticationFunctionRole.Arn
