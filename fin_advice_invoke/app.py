@@ -28,9 +28,18 @@ def lambda_handler(event, context):
 
     kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
     base_url = 'https://api.sandbox.finbricks.com'
-    bank_account_id = 10037188
-    transactions_endpoint = f'/account/transactions?merchantId={kid}&clientId={client_id}&paymentProvider=MOCK_COBS&bankAccountId={bank_account_id}'
+    payment_provider = "MOCK_COBS"
+    accounts_endpoint = f'/account/listWithBalance?merchantId={kid}&clientId={client_id}&paymentProvider={payment_provider}'
 
+    accounts_response = requests.get(
+        f'{base_url}{accounts_endpoint}',
+        headers={'JWS-Signature': get_signature(accounts_endpoint, "", kid, private_key)})
+
+    accounts = accounts_response.json()
+    bank_account_id = accounts[0]["id"]
+
+    # TODO: when the api starts to support filtering based on direction, limit the search to only debit transactions
+    transactions_endpoint = f'/account/transactions?merchantId={kid}&clientId={client_id}&paymentProvider={payment_provider}&bankAccountId={bank_account_id}'
     transactions_response = requests.get(
         f'{base_url}{transactions_endpoint}',
         headers={'JWS-Signature': get_signature(transactions_endpoint, "", kid, private_key)})
