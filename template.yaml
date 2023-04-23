@@ -63,6 +63,44 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./fin_advice_invoke
       DockerTag: python3.9-v1
+  FinAdviceFetchFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Description: "Asynchronous function to invoke the financial advice message generation"
+    Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          SECOND_FUNCTION_ARN: !GetAtt FinAdviceProcessFunction.Arn
+          PAYMENT_PROVIDER: !Ref PaymentProvider
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue # allow secrets to be read
+                - lambda:* # allow it to call any lambda in this account
+                - dynamodb:* # allow it to operate over dynamodb
+              Resource: '*'
+      Events:
+        Generate:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /fetch
+            Method: get
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt DynamoDBTable.StreamArn
+            BatchSize: 100
+            StartingPosition: TRIM_HORIZON
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./fin_advice_fetch
+      DockerTag: python3.9-v1
   FinAdviceProcessFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Description: "Asynchronous function to process the financial advice message generation"
