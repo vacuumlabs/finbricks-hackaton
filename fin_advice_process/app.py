@@ -22,7 +22,10 @@ def lambda_handler(event, context):
     }
     dynamodb = boto3.resource('dynamodb', **dynamodb_config)
     table = dynamodb.Table(TABLE_NAME)
-
+    table.put_item(Item={
+        'dt': event["client_id"],
+        'value': event["data"]
+    })
 
 # Test locally
 if __name__ == "__main__":
