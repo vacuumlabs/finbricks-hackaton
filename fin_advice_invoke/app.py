@@ -34,6 +34,7 @@ def lambda_handler(event, context):
         headers={'JWS-Signature': get_signature(transactions_endpoint, "", kid, private_key)})
 
     result = ""
+    status = ""
 
     if transactions_response.status_code == 200:
         for transaction in transactions_response.json()["transactions"]:
@@ -43,20 +44,19 @@ def lambda_handler(event, context):
                     "identification"][
                     "other"]["identification"]
             result += f'{transaction["creditDebitIndicator"]} {transaction["valueDate"]["date"]} {transaction["amount"]["value"]} {transaction["amount"]["currency"]} {creditor} \n'
-
-    print(result)
+            status = "success"
+    else:
+        status = "fail"
+        print(f'{transactions_response.status_code}: {transactions_response.json()}')
 
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
-    response = lambda_inv.invoke(FunctionName=os.environ["SECOND_FUNCTION_ARN"],
-                                 InvocationType='RequestResponse', Payload=json.dumps({"data": result}))
-    response_payload = json.loads(response['Payload'].read())
-
-    print(response_payload)
+    lambda_inv.invoke(FunctionName=os.environ["SECOND_FUNCTION_ARN"],
+                      InvocationType='Event', Payload=json.dumps({"data": result}))
 
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "results": [{"result": response_payload["body"]}],
+            "status": status,
         })
     }
 
