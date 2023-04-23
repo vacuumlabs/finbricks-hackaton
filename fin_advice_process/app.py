@@ -3,7 +3,7 @@ import os
 
 import boto3 as boto3
 
-TABLE_NAME = 'aiData'
+TABLE_NAME = 'DynamoDBTable'
 REGION_NAME = 'eu-central-1'
 
 
@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     print(event)
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
     response = lambda_inv.invoke(FunctionName=os.environ["AI_FUNCTION_ARN"],
-                                 InvocationType='Event', Payload=json.dumps({"data": event["data"]}))
+                                 InvocationType='RequestResponse', Payload=json.dumps({"data": event["data"]}))
     response_payload = json.loads(response['Payload'].read())
     print(response_payload)
 
