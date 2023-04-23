@@ -4,7 +4,7 @@ This project contains source code and supporting files for a serverless applicat
 
 - fin_advice_invoke - Code for the application's FinAdviceInvokeFunction lambda function and Project Dockerfile. Asynchronous function to invoke the financial advice message generation. Function is to be called from API GW
 - fin_advice_ai_message - Code for the application's FinAdviceAiMessageFunction lambda function and Project Dockerfile. Function returns the AI-generated financial advice text.
-- transaction_categorization - Code for the application's FinAdviceAiMessageFunction lambda function and Project Dockerfile. Function returns the AI-generated financial advice text.
+- transaction_categorization - Code for the application's FinAdviceAiMessageFunction lambda function and Project Dockerfile. Function returns the AI-generated category of a transaction.
 - events - Invocation events that you can use to invoke the function.
 - tests - Unit tests for the application code. 
 - template.yaml - A template that defines the application's AWS resources.
