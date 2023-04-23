@@ -3,13 +3,11 @@ import os
 
 import boto3 as boto3
 
-TABLE_NAME = 'DynamoDBTable'
+TABLE_NAME = 'finbricks-hackaton-DynamoDBTable-1C7A3ZJGAMF6V'
 REGION_NAME = 'eu-central-1'
 
 
 def lambda_handler(event, context):
-    query_parameters = event.get("queryStringParameters", {})
-    client_id = query_parameters.get("clientId", "")
     print(event)
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
     response = lambda_inv.invoke(FunctionName=os.environ["AI_FUNCTION_ARN"],
