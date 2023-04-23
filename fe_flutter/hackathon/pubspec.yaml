@@ -1,0 +1,41 @@
+name: feature_hackathon
+description: A new Flutter module project.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: ">=3.3.0"
+
+dependencies:
+  app_config:
+    path: ../../generic/app_config
+  cupertino_icons: ^1.0.2
+  data_abstraction:
+    path: ../../library/data_abstraction
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.0.1
+  formz: ^0.4.1
+  generic_ui:
+    path: ../../generic/ui
+  kiwi: ^4.0.1
+  library_injection:
+    path: ../../library/injection
+  module_common:
+    path: ../../generic/module_common
+
+dev_dependencies:
+  bloc_test: ^9.0.3
+  build_runner: ^2.1.7
+  flutter_lints: ^2.0.1
+  flutter_test:
+    sdk: flutter
+  hive_generator: ^1.1.3
+  kiwi_generator: ^4.0.1
+  mocktail: ^0.3.0
+  mocktail_image_network: ^0.3.0
+
+flutter:
+  uses-material-design: true
