@@ -139,6 +139,11 @@ You can find more information and examples about filtering Lambda function logs 
 
 Tests are defined in the `tests` folder in this project. Use PIP to install the [pytest](https://docs.pytest.org/en/latest/) and run unit tests from your local machine.
 
+## API tests
+
+See Postman test collection in `postman_collection.json`
+
+
 ```bash
 finbricks-hackaton$ pip install pytest pytest-mock --user
 finbricks-hackaton$ python -m pytest tests/ -v
