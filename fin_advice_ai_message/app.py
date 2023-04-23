@@ -75,7 +75,7 @@ def lambda_handler(event, context):
 
     llm_chain = get_chain()
     llm_results = llm_chain(event)
-    print(llm_results["result"])
+    print(llm_results["result"]["data"])
 
     return {
         "statusCode": 200,
@@ -87,7 +87,7 @@ def lambda_handler(event, context):
 
 # Test locally
 if __name__ == "__main__":
-    inputs = {
+    inputs = { "data": {
         #         "balance": "1000 CZK",
         #         "goal": "save 1000000 CZK for a new house",
         #         "financial_history": """
@@ -166,6 +166,6 @@ if __name__ == "__main__":
         # Amazingly, your balance ended at 4,174 CZK, which means you almost reached your goal to save 5,000 CZK a month. High five!
         #
         # Now, let's make a tiny change to hit that goal: maybe cut down on those tasty McDonald's trips, which cost you 5,116 CZK last month. With this tweak, you'll be a saving superstar in no time!
-    }
+    }}
 
     print(lambda_handler(inputs, None))
