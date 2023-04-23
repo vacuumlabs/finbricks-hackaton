@@ -9,6 +9,8 @@ REGION_NAME = 'eu-central-1'
 
 def lambda_handler(event, context):
     print(event)
+    if "data" not in event:
+        return
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
     response = lambda_inv.invoke(FunctionName=os.environ["AI_FUNCTION_ARN"],
                                  InvocationType='RequestResponse', Payload=json.dumps({"data": event["data"]}))
@@ -22,8 +24,9 @@ def lambda_handler(event, context):
     table = dynamodb.Table(TABLE_NAME)
     table.put_item(Item={
         'id': event["client_id"],
-        'value': event["data"]
+        'value': response_payload["body"]["result"]
     })
+
 
 # Test locally
 if __name__ == "__main__":
