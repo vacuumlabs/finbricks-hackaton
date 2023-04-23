@@ -67,11 +67,27 @@ Resources:
               Action:
                 - secretsmanager:GetSecretValue # allow secrets to be read
                 - lambda:* # allow it to call any lambda in this account
+                - dynamodb:* # allow it to operate over dynamodb
               Resource: '*'
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt DynamoDBTable.StreamArn
+            BatchSize: 100
+            StartingPosition: TRIM_HORIZON
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./fin_advice_process
       DockerTag: python3.9-v1
+  DynamoDBTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      #ProvisionedThroughput:
+      TableName: !Sub aiData
   FinAdviceAiMessageFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Description: "Function to return the AI-generated financial advice text"

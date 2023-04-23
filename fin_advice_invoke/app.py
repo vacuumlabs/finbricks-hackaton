@@ -51,7 +51,7 @@ def lambda_handler(event, context):
 
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
     lambda_inv.invoke(FunctionName=os.environ["SECOND_FUNCTION_ARN"],
-                      InvocationType='Event', Payload=json.dumps({"data": result}))
+                      InvocationType='Event', Payload=json.dumps({"client_id": client_id, "data": result}))
 
     return {
         "statusCode": 200,
