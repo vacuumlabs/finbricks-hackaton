@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     query_parameters = event.get("queryStringParameters", {})
     client_id = query_parameters.get("clientId", "")
 
-    private_key = get_secret("finbricks_pk3")
+    private_key = get_secret("finbricks_pk4")
 
     kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
     base_url = 'https://api.sandbox.finbricks.com'
