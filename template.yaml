@@ -18,16 +18,18 @@ Parameters:
     Default: "EMPTY"
 
 Resources:
-  FirstFunction:
+  FinAdviceInvokeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Description: "FirstFunction to be called from API GW"
+    Description: "Asynchronous function to invoke the financial advice message generation"
     Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
       PackageType: Image
       Architectures:
         - x86_64
       Environment:
         Variables:
-          SECOND_FUNCTION_ARN: !GetAtt SecondFunction.Arn
+          SECOND_FUNCTION_ARN: !GetAtt FinAdviceAiMessageFunction.Arn
       Policies:
         - Version: '2012-10-17' # Policy Document
           Statement:
@@ -37,19 +39,21 @@ Resources:
                 - lambda:* # allow it to call any lambda in this account
               Resource: '*'
       Events:
-        Event:
+        Generate:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /event
+            Path: /generate
             Method: get
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./first_function
+      DockerContext: ./fin_advice_invoke
       DockerTag: python3.9-v1
-  SecondFunction:
+  FinAdviceAiMessageFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Description: "SecondFunction to be called by FirstFunction"
+    Description: "Function to return the AI-generated financial advice text"
     Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
       Environment:
         Variables:
           OpenaiApiKey: !Ref OpenaiApiKey
@@ -66,43 +70,66 @@ Resources:
               Resource: '*'
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./second_function
+      DockerContext: ./fin_advice_ai_message
+      DockerTag: python3.9-v1
+  TransactionCategorizationFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Description: "Function to categorize incoming transaction"
+    Properties:
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      PackageType: Image
+      Environment:
+        Variables:
+          OpenaiApiKey: !Ref OpenaiApiKey
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue # allow secrets to be read
+                - lambda:* # allow it to call any lambda in this account
+              Resource: '*'
+      Events:
+        Generate:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /categorize
+            Method: get
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./transaction_categorization
       DockerTag: python3.9-v1
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for FirstFunction"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/event/"
-  FirstFunction:
-    Description: "FirstFunction Lambda Function ARN"
-    Value: !GetAtt FirstFunction.Arn
-  FirstFunctionIamRole:
-    Description: "Implicit IAM Role created for FirstFunction function"
-    Value: !GetAtt FirstFunctionRole.Arn
+  FinAdviceInvokeApi:
+    Description: "API Gateway endpoint URL for Prod stage for FinAdviceInvokeFunction"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/generate/"
+  FinAdviceInvokeFunction:
+    Description: "FinAdviceInvokeFunction Lambda Function ARN"
+    Value: !GetAtt FinAdviceInvokeFunction.Arn
+  FinAdviceInvokeFunctionIamRole:
+    Description: "Implicit IAM Role created for FinAdviceInvokeFunction function"
+    Value: !GetAtt FinAdviceInvokeFunctionRole.Arn
 
-  SecondFunction:
-    Description: "SecondFunction Lambda Function ARN"
-    Value: !GetAtt SecondFunction.Arn
-  SecondFunctionIamRole:
-    Description: "Implicit IAM Role created for SecondFunction function"
-    Value: !GetAtt SecondFunctionRole.Arn
+  FinAdviceAiMessageFunction:
+    Description: "FinAdviceAiMessageFunction Lambda Function ARN"
+    Value: !GetAtt FinAdviceAiMessageFunction.Arn
+  FinAdviceAiMessageFunctionIamRole:
+    Description: "Implicit IAM Role created for FinAdviceAiMessageFunction function"
+    Value: !GetAtt FinAdviceAiMessageFunctionRole.Arn
 
-#Mappings:
-#  Map:
-#    LOCAL:
-#      OPENAI_API_KEY: OPENAI_API_KEY
-#    PROD:
-#      OPENAI_API_KEY: '{{resolve:sam:OPENAI_API_KEY}}'
-#
-#
-#Parameters:
-#  Env:
-#    Type: String
-#    Description: Environment this lambda is being run in.
-#    Default: LOCAL
-#    AllowedValues:
-#      - LOCAL
-#      - PROD
+  TransactionCategorizationApi:
+    Description: "API Gateway endpoint URL for Prod stage for TransactionCategorizationFunction"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/categorize/"
+  TransactionCategorizationFunction:
+    Description: "FinAdviceInvokeFunction Lambda Function ARN"
+    Value: !GetAtt TransactionCategorizationFunction.Arn
+  TransactionCategorizationFunctionIamRole:
+    Description: "Implicit IAM Role created for FinAdviceInvokeFunction function"
+    Value: !GetAtt TransactionCategorizationFunctionRole.Arn
