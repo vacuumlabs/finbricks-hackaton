@@ -8,6 +8,8 @@ REGION_NAME = 'eu-central-1'
 
 
 def lambda_handler(event, context):
+    query_parameters = event.get("queryStringParameters", {})
+    client_id = query_parameters.get("clientId", "")
     print(event)
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
     response = lambda_inv.invoke(FunctionName=os.environ["AI_FUNCTION_ARN"],

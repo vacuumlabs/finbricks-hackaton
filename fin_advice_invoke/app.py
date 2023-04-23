@@ -21,10 +21,12 @@ def get_signature(endpoint, body, kid, private_key):
 
 
 def lambda_handler(event, context):
+    query_parameters = event.get("queryStringParameters", {})
+    client_id = query_parameters.get("clientId", "")
+
     private_key = get_secret("finbricks_pk3")
 
     kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
-    client_id = "hackathon2023_vl"
     base_url = 'https://api.sandbox.finbricks.com'
     bank_account_id = 10037188
     transactions_endpoint = f'/account/transactions?merchantId={kid}&clientId={client_id}&paymentProvider=MOCK_COBS&bankAccountId={bank_account_id}'
