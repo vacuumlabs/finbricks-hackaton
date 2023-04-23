@@ -31,6 +31,8 @@
               </option>
               <option name="tempParameterOverrides">
                 <map>
+                  <entry key="ClientGoal" value="save 5000 CZK a month" />
+                  <entry key="ClientIncome" value="48000 CZK" />
                   <entry key="OpenaiApiKey" value="EMPTY" />
                   <entry key="PaymentProvider" value="MOCK_COBS" />
                 </map>

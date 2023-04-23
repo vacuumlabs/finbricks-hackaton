@@ -20,6 +20,14 @@ Parameters:
     Type: String
     Description: PAYMENT_PROVIDER
     Default: "MOCK_COBS"
+  ClientGoal:
+    Type: String
+    Description: CLIENT_GOAL
+    Default: "save 5000 CZK a month"
+  ClientIncome:
+    Type: String
+    Description: CLIENT_INCOME
+    Default: "48000 CZK"
 
 Resources:
   FinAdviceInvokeFunction:
@@ -35,6 +43,8 @@ Resources:
         Variables:
           SECOND_FUNCTION_ARN: !GetAtt FinAdviceProcessFunction.Arn
           PAYMENT_PROVIDER: !Ref PaymentProvider
+          CLIENT_GOAL: !Ref ClientGoal
+          CLIENT_INCOME: !Ref ClientIncome
       Policies:
         - Version: '2012-10-17' # Policy Document
           Statement:

@@ -28,6 +28,8 @@ def lambda_handler(event, context):
 
     kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
     base_url = 'https://api.sandbox.finbricks.com'
+    client_income = os.environ.get("CLIENT_INCOME", "48000 CZK")
+    client_goal = os.environ.get("CLIENT_GOAL", "save 5000 CZK a month")
     payment_provider = os.environ.get("PAYMENT_PROVIDER", "MOCK_COBS")
     accounts_endpoint = f'/account/listWithBalance?merchantId={kid}&clientId={client_id}&paymentProvider={payment_provider}'
 
@@ -37,6 +39,8 @@ def lambda_handler(event, context):
 
     accounts = accounts_response.json()
     bank_account_id = accounts[0]["id"]
+    account_balance = accounts[0]["balance"]
+    account_currency = accounts[0]["currency"]
 
     # TODO: when the api starts to support filtering based on direction, limit the search to only debit transactions
     transactions_endpoint = f'/account/transactions?merchantId={kid}&clientId={client_id}&paymentProvider={payment_provider}&bankAccountId={bank_account_id}'
@@ -60,9 +64,16 @@ def lambda_handler(event, context):
         status = "fail"
         print(f'{transactions_response.status_code}: {transactions_response.json()}')
 
+    data = {
+        "financial_history": result,
+        "balance": f"{account_balance} {account_currency}",
+        "goal": client_goal,
+        "income": client_income
+    }
+
     lambda_inv = boto3.client("lambda", region_name="eu-central-1")
     lambda_inv.invoke(FunctionName=os.environ["SECOND_FUNCTION_ARN"],
-                      InvocationType='Event', Payload=json.dumps({"client_id": client_id, "data": result}))
+                      InvocationType='Event', Payload=json.dumps({"client_id": client_id, "data": data}))
 
     return {
         "statusCode": 200,
