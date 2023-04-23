@@ -16,6 +16,10 @@ Parameters:
     Type: String
     Description: OPENAI_API_KEY
     Default: "EMPTY"
+  PaymentProvider:
+    Type: String
+    Description: PAYMENT_PROVIDER
+    Default: "MOCK_COBS"
 
 Resources:
   FinAdviceInvokeFunction:
@@ -30,6 +34,7 @@ Resources:
       Environment:
         Variables:
           SECOND_FUNCTION_ARN: !GetAtt FinAdviceProcessFunction.Arn
+          PAYMENT_PROVIDER: !Ref PaymentProvider
       Policies:
         - Version: '2012-10-17' # Policy Document
           Statement:

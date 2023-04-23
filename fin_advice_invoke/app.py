@@ -28,7 +28,7 @@ def lambda_handler(event, context):
 
     kid = "ec9e2133-520f-4ca0-9e12-f167339d232e"
     base_url = 'https://api.sandbox.finbricks.com'
-    payment_provider = "MOCK_COBS"
+    payment_provider = os.environ.get("PAYMENT_PROVIDER", "MOCK_COBS")
     accounts_endpoint = f'/account/listWithBalance?merchantId={kid}&clientId={client_id}&paymentProvider={payment_provider}'
 
     accounts_response = requests.get(
